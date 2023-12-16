@@ -1,0 +1,12 @@
+<h1><%= title %></h1>
+
+<ul>
+  <% book_list.forEach(book =>{ %>
+  <li>
+    <a href="<%=book.url%>"><%= book.title %></a>
+    (<%= book.author.name %>)
+  </li>
+  <%}) %> <% if(book_list.length === 0){%>
+  <li>there are no books available</li>
+  <%} %>
+</ul>
