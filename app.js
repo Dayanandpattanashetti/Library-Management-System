@@ -44,8 +44,12 @@ const mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(mongoDB);
-  console.log("Database connection successful");
+  try {
+    await mongoose.connect(mongoDB);
+    console.log("Database connection successful");
+  } catch (error) {
+    console.error("Database connection error:", error);
+  }
 }
 
 app.use(logger("dev"));
@@ -63,13 +67,16 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  console.error(err); // Log the error
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-  res.locals.error = err;
   res.status(err.status || 500);
   res.render("error");
 });
 
-app.listen(3000);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 module.exports = app;
